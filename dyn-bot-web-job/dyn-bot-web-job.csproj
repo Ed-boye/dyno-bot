@@ -66,7 +66,6 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\jobs\triggered\dyno-bot\dyno-bot.exe.config" />
     <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\dyn-bot-web-job - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
@@ -77,54 +76,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\jobs\triggered\dyno-bot\Discord.Net.Commands.dll" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\Discord.Net.Commands.xml" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\Discord.Net.Core.dll" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\Discord.Net.Core.xml" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\Discord.Net.Rest.dll" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\Discord.Net.Rest.xml" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\Discord.Net.Rpc.dll" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\Discord.Net.Rpc.xml" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\Discord.Net.Webhook.dll" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\Discord.Net.Webhook.xml" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\Discord.Net.WebSocket.dll" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\Discord.Net.WebSocket.xml" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\dyno-bot.exe" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\dyno-bot.pdb" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\Microsoft.Extensions.DependencyInjection.Abstractions.xml" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\Microsoft.Extensions.DependencyInjection.dll" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\Microsoft.Extensions.DependencyInjection.xml" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\Microsoft.Win32.Primitives.dll" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\Newtonsoft.Json.dll" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\Newtonsoft.Json.xml" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\System.AppContext.dll" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\System.Collections.Immutable.dll" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\System.Collections.Immutable.xml" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\System.Console.dll" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\System.Diagnostics.DiagnosticSource.dll" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\System.Diagnostics.DiagnosticSource.xml" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\System.Globalization.Calendars.dll" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\System.Interactive.Async.dll" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\System.Interactive.Async.xml" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\System.IO.Compression.dll" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\System.IO.Compression.ZipFile.dll" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\System.IO.FileSystem.dll" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\System.IO.FileSystem.Primitives.dll" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\System.Net.Http.dll" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\System.Net.Sockets.dll" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\System.Runtime.InteropServices.RuntimeInformation.dll" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\System.Security.Cryptography.Algorithms.dll" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\System.Security.Cryptography.Encoding.dll" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\System.Security.Cryptography.Primitives.dll" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\System.Security.Cryptography.X509Certificates.dll" />
-    <Content Include="App_Data\jobs\triggered\dyno-bot\System.Xml.ReaderWriter.dll" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="App_Data\jobs\triggered\dyno-bot\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
