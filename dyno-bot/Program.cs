@@ -10,9 +10,9 @@ namespace Dynobot
 {
     public class Program
     {
-        private SocketGuild _guild;
         private DiscordSocketClient _client;
         private System.Timers.Timer _timer;
+        private StringBuilder connectedGuilds;
 
         public static void Main(string[] args)
             => new Program().MainAsync().GetAwaiter().GetResult();
@@ -21,54 +21,72 @@ namespace Dynobot
         {
             _timer = new System.Timers.Timer(30000);
             _client = new DiscordSocketClient();
-            _client.Log += Log;
+            connectedGuilds = new StringBuilder();
 
-            string token = "nope";
+            string token = "Mzc0MzEyMzEwMzM0MDI5ODM1.DNfdBg.ar7jV-azPUUptyyes_DjMP1T1U8";
             await _client.LoginAsync(TokenType.Bot, token);
             await _client.StartAsync();
 
-            _client.UserVoiceStateUpdated += UserVoiceStateUpdated;
-            _client.GuildMemberUpdated += UserUpdated;
+            _client.Log += Log;
+            _client.UserVoiceStateUpdated += UserVoiceStateUpdatedAsync;
+            _client.GuildMemberUpdated += UserUpdatedAsync;
+            _client.JoinedGuild += UpdateGuildList; ;
+            _client.LeftGuild += UpdateGuildList;
+            _client.Ready += Init;
             _timer.Elapsed += heartbeat;
 
             _timer.Enabled = true;
+            
             // Block this task until the program is closed.
             await Task.Delay(-1);
         }
 
-        private void heartbeat(object sender, System.Timers.ElapsedEventArgs e)
+        private Task Init()
         {
-            Console.WriteLine("Dyno is still alive.");
+            Console.WriteLine("Connected to " + _client.Guilds.Count + " guild(s).");
+            foreach(SocketGuild guild in _client.Guilds)
+            {
+                connectedGuilds.Append(guild.Name + ", ");
+
+                foreach (SocketGuildChannel channel in guild.Channels)
+                {
+                    var voiceChannel = channel as SocketVoiceChannel;
+                    if (voiceChannel != null && authGrant(voiceChannel))
+                    {
+                        Task.Run(() => refreshChannelAsync(voiceChannel)).Wait();
+                    }
+                }
+            }
+
+            connectedGuilds.Remove(connectedGuilds.Length - 2, 2);
+
+            return Task.CompletedTask;
         }
 
-        private async Task UserUpdated(SocketUser before, SocketUser after)
+        private Task UpdateGuildList(SocketGuild unused)
+        {
+            Console.WriteLine("Guild status updated, connected to " + _client.Guilds.Count + " guild(s).");
+            connectedGuilds.Clear();
+            foreach (SocketGuild guild in _client.Guilds)
+            {
+                connectedGuilds.Append(guild.Name + ", ");
+            }
+            connectedGuilds.Remove(connectedGuilds.Length - 2, 2);
+            return Task.CompletedTask;
+        }
+
+        private async Task UserUpdatedAsync(SocketUser before, SocketUser after)
         {
             var user = after as SocketGuildUser;
             if (authGrant(user.VoiceChannel) && user.VoiceChannel != null)
             {
-                await refreshChannel(user.VoiceChannel);
+                await refreshChannelAsync(user.VoiceChannel);
             }
         }
 
-        private async Task UserVoiceStateUpdated(SocketUser user, SocketVoiceState before, SocketVoiceState after)
+        private async Task UserVoiceStateUpdatedAsync(SocketUser user, SocketVoiceState before, SocketVoiceState after)
         {
-            if (authGrant(after.VoiceChannel) && authGrant(before.VoiceChannel)
-                && after.VoiceChannel != null && before.VoiceChannel != null)
-            {
-                Task.WaitAll(refreshChannel(after.VoiceChannel), refreshChannel(before.VoiceChannel));
-            }
-            else if (authGrant(after.VoiceChannel) && after.VoiceChannel != null)
-            {
-                await refreshChannel(after.VoiceChannel);
-            }
-            else if (authGrant(before.VoiceChannel) && before.VoiceChannel != null)
-            {
-                await refreshChannel(before.VoiceChannel);
-            }
-            else
-            {
-                // do nothing
-            }
+            await Task.WhenAll(checkAndUpdateAsync(after.VoiceChannel), checkAndUpdateAsync(before.VoiceChannel));
         }
 
         private Task Log(LogMessage msg)
@@ -77,17 +95,19 @@ namespace Dynobot
             return Task.CompletedTask;
         }
 
-        private bool authGrant(SocketVoiceChannel channel)
+        private async Task checkAndUpdateAsync(SocketVoiceChannel voiceChannel)
         {
-            return channel.PermissionOverwrites.ToList().Exists(x => x.TargetId == _client.CurrentUser.Id);
+            if (voiceChannel != null && authGrant(voiceChannel))
+            {
+                await refreshChannelAsync(voiceChannel);
+            }
         }
 
-        private async Task refreshChannel(SocketVoiceChannel channel)
+        // add auth decorator
+        private async Task refreshChannelAsync(SocketVoiceChannel channel)
         {
             var guild = _client.GetGuild(channel.Guild.Id);
             var guildChannel = guild.GetChannel(channel.Id);
-
-            // TODO: check all users, if no one in game, set channel to default
 
             //if only user
             if (channel.Users.Count == 1 && channel.Users.First().Game != null)
@@ -141,6 +161,16 @@ namespace Dynobot
             {
                 await guildChannel.ModifyAsync(x => x.Name = "Channel " + channel.Position + " (Dynamic)");
             }
+        }
+
+        private bool authGrant(SocketVoiceChannel channel)
+        {
+            return channel.PermissionOverwrites.ToList().Exists(x => x.TargetId == _client.CurrentUser.Id);
+        }
+
+        private void heartbeat(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            Console.WriteLine("Connected to the following guild(s): " + connectedGuilds.ToString());
         }
     }
 }
